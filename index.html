@@ -79,8 +79,11 @@
 						(currentHour === restartTime.hour && currentMinute >= restartTime.minute)
 					) {
 						if (Tone.Transport.state !== "started") {
+							Tone.Transport.stop(); // Ensure the transport is stopped before restarting
+							Tone.Transport.cancel(); // Clear all scheduled events
+							initializeScheduledFunctions(); // Reinitialize scheduled functions
 							Tone.Transport.start();
-							console.log("Audio restarted");
+							console.log("Audio restarted and transport reinitialized");
 						}
 					}
 				}
@@ -90,6 +93,22 @@
 
 				// Initial check
 				checkTime();
+			}
+
+			function initializeScheduledFunctions() {
+				// Reinitialize all scheduled functions here
+				scheduleRandomRepeat((time) => playRandomOneShot(time), 30, 45);
+				scheduleRandomRepeat((time) => sampler2.triggerAttack('F4', time), 15, 30);
+				scheduleRandomRepeat((time) => sampler2.triggerAttack('Ab4', time), 15, 30);
+				scheduleRandomRepeat((time) => sampler2.triggerAttack('C5', time), 15, 30);
+				scheduleRandomRepeat((time) => sampler2.triggerAttack('Db5', time), 15, 30);
+				scheduleRandomRepeat((time) => sampler2.triggerAttack('Eb5', time), 15, 30);
+				scheduleRandomRepeat((time) => sampler2.triggerAttack('F5', time), 15, 30);
+				scheduleRandomRepeat((time) => sampler2.triggerAttack('Ab5', time), 15, 30);
+				scheduleRandomRepeat((time) => sampler1.triggerAttack('C0', time), 30, 60);
+				scheduleRandomRepeat((time) => sampler1.triggerAttack('F0', time), 25, 45.3);
+				scheduleRandomRepeat((time) => sampler1.triggerAttack('G2', time), 35, 40);
+				scheduleRandomRepeat((time) => sampler1.triggerAttack('D#2', time), 37, 50.4);
 			}
 
 			const sampler1 = new Tone.Sampler({

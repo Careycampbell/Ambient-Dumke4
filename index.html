@@ -8,31 +8,24 @@
 		<script src="https://cdn.jsdelivr.net/npm/tone@latest/build/Tone.js"></script>
 		<script>
 			document.addEventListener("DOMContentLoaded", () => {
-				// Create Play button
-				const playButton = document.createElement("button");
-				playButton.id = "playButton";
-				playButton.style.display = "block";
-				playButton.style.margin = "10px";
-				playButton.style.padding = "10px";
-				playButton.style.backgroundColor = "blue";
-				playButton.style.color = "white";
-				playButton.textContent = "Start Audio Automation";
-				document.body.appendChild(playButton);
+				const playButton = document.getElementById("playButton");
 
-				// User interaction to unlock AudioContext
 				playButton.addEventListener("click", async () => {
 					await Tone.start(); // Unlock the AudioContext
 					console.log("AudioContext unlocked");
 
-					// Start and stop audio at specific times
-					scheduleAudioAutomation();
+					// Get user-defined start and stop times
+					const startTimeInput = document.getElementById("startTime").value;
+					const stopTimeInput = document.getElementById("stopTime").value;
+
+					const [startHour, startMinute] = startTimeInput.split(":").map(Number);
+					const [stopHour, stopMinute] = stopTimeInput.split(":").map(Number);
+
+					scheduleAudioAutomation({ hour: startHour, minute: startMinute }, { hour: stopHour, minute: stopMinute });
 				});
 			});
 
-			function scheduleAudioAutomation() {
-				const startTime = { hour: 11, minute: 0 }; // 9:00 AM
-				const stopTime = { hour: 11, minute: 15 }; // 5:00 PM
-
+			function scheduleAudioAutomation(startTime, stopTime) {
 				function checkTime() {
 					const now = new Date();
 					const currentHour = now.getHours();
@@ -211,5 +204,16 @@
 		<p>Wait because sometimes it takes a minute to start</p>
 		<p>The first thing you hear is an obnoxious wave sound to set volume</p>
 		<p>If you don't hear that after clicking the button, refresh the page.</p>
+
+		<!-- Input fields for start and stop times -->
+		<label for="startTime">Start Time (HH:MM):</label>
+		<input type="time" id="startTime" value="11:00">
+		<br>
+		<label for="stopTime">Stop Time (HH:MM):</label>
+		<input type="time" id="stopTime" value="11:15">
+		<br><br>
+
+		<!-- Play button -->
+		<button id="playButton">Start Audio Automation</button>
 	</body>
 </html>

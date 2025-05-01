@@ -42,28 +42,19 @@
 					console.log(`Start time: ${startTime.hour}:${startTime.minute}`);
 					console.log(`Stop time: ${stopTime.hour}:${stopTime.minute}`);
 
-					 // Turn audio on at the start time
+					// Check if the current time is within the active range (startTime to stopTime)
 					if (
-						currentHour > startTime.hour ||
-						(currentHour === startTime.hour && currentMinute >= startTime.minute)
+						(currentHour > startTime.hour || 
+						(currentHour === startTime.hour && currentMinute >= startTime.minute)) &&
+						(currentHour < stopTime.hour || 
+						(currentHour === stopTime.hour && currentMinute < stopTime.minute))
 					) {
-						if (
-							currentHour < stopTime.hour ||
-							(currentHour === stopTime.hour && currentMinute < stopTime.minute)
-						) {
-							if (Tone.Master.volume.value !== 0) {
-								Tone.Master.volume.value = 0; // Unmute audio
-								console.log("Audio unmuted");
-							}
-							return;
+						if (Tone.Master.volume.value !== 0) {
+							Tone.Master.volume.value = 0; // Unmute audio
+							console.log("Audio unmuted");
 						}
-					}
-
-					 // Turn audio off at the stop time
-					if (
-						currentHour > stopTime.hour ||
-						(currentHour === stopTime.hour && currentMinute >= stopTime.minute)
-					) {
+					} else {
+						// Otherwise, mute the audio
 						if (Tone.Master.volume.value !== -Infinity) {
 							Tone.Master.volume.value = -Infinity; // Mute audio
 							console.log("Audio muted");

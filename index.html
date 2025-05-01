@@ -42,7 +42,7 @@
 					console.log(`Start time: ${startTime.hour}:${startTime.minute}`);
 					console.log(`Stop time: ${stopTime.hour}:${stopTime.minute}`);
 
-					// Start everything at the start time
+					 // Turn audio on at the start time
 					if (
 						currentHour > startTime.hour ||
 						(currentHour === startTime.hour && currentMinute >= startTime.minute)
@@ -59,7 +59,7 @@
 						}
 					}
 
-					// Stop everything at the stop time
+					 // Turn audio off at the stop time
 					if (
 						currentHour > stopTime.hour ||
 						(currentHour === stopTime.hour && currentMinute >= stopTime.minute)

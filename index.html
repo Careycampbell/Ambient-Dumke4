@@ -82,7 +82,7 @@
 							Tone.Transport.stop(); // Ensure the transport is stopped before restarting
 							Tone.Transport.cancel(); // Clear all scheduled events
 							initializeScheduledFunctions(); // Reinitialize scheduled functions
-							Tone.Transport.start();
+							Tone.Transport.start(); // Restart the transport
 							console.log("Audio restarted and transport reinitialized");
 						}
 					}
@@ -176,11 +176,13 @@
 				return Math.random() * (max - min) + min;
 			}
 
-			function scheduleRandomRepeat(scheduledFunction, minDelay, maxDelay, startTime = getRandomBetween(minDelay, maxDelay)) {
+			function scheduleRandomRepeat(scheduledFunction, minDelay, maxDelay) {
+				const delay = getRandomBetween(minDelay, maxDelay);
+				const startTime = Tone.Transport.now() + delay; // Schedule relative to the current transport time
+
 				Tone.Transport.scheduleOnce((time) => {
 					scheduledFunction(time);
-					const delay = getRandomBetween(minDelay, maxDelay);
-					scheduleRandomRepeat(scheduledFunction, minDelay, maxDelay, time + delay);
+					scheduleRandomRepeat(scheduledFunction, minDelay, maxDelay); // Reschedule the function
 				}, startTime);
 			}
 

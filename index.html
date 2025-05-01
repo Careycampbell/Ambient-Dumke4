@@ -14,18 +14,24 @@
 					await Tone.start(); // Unlock the AudioContext
 					console.log("AudioContext unlocked");
 
-					// Get user-defined start and stop times
+					// Get user-defined start, stop, and restart times
 					const startTimeInput = document.getElementById("startTime").value;
 					const stopTimeInput = document.getElementById("stopTime").value;
+					const restartTimeInput = document.getElementById("restartTime").value;
 
 					const [startHour, startMinute] = startTimeInput.split(":").map(Number);
 					const [stopHour, stopMinute] = stopTimeInput.split(":").map(Number);
+					const [restartHour, restartMinute] = restartTimeInput.split(":").map(Number);
 
-					scheduleAudioAutomation({ hour: startHour, minute: startMinute }, { hour: stopHour, minute: stopMinute });
+					scheduleAudioAutomation(
+						{ hour: startHour, minute: startMinute },
+						{ hour: stopHour, minute: stopMinute },
+						{ hour: restartHour, minute: restartMinute }
+					);
 				});
 			});
 
-			function scheduleAudioAutomation(startTime, stopTime) {
+			function scheduleAudioAutomation(startTime, stopTime, restartTime) {
 				function checkTime() {
 					const now = new Date();
 					const currentHour = now.getHours();
@@ -34,6 +40,7 @@
 					console.log(`Current time: ${currentHour}:${currentMinute}`);
 					console.log(`Start time: ${startTime.hour}:${startTime.minute}`);
 					console.log(`Stop time: ${stopTime.hour}:${stopTime.minute}`);
+					console.log(`Restart time: ${restartTime.hour}:${restartTime.minute}`);
 
 					if (
 						currentHour > startTime.hour ||
@@ -51,9 +58,30 @@
 						}
 					}
 
-					if (Tone.Transport.state === "started") {
-						Tone.Transport.stop();
-						console.log("Audio stopped");
+					if (
+						currentHour > stopTime.hour ||
+						(currentHour === stopTime.hour && currentMinute >= stopTime.minute)
+					) {
+						if (
+							currentHour < restartTime.hour ||
+							(currentHour === restartTime.hour && currentMinute < restartTime.minute)
+						) {
+							if (Tone.Transport.state === "started") {
+								Tone.Transport.stop();
+								console.log("Audio stopped");
+							}
+							return;
+						}
+					}
+
+					if (
+						currentHour > restartTime.hour ||
+						(currentHour === restartTime.hour && currentMinute >= restartTime.minute)
+					) {
+						if (Tone.Transport.state !== "started") {
+							Tone.Transport.start();
+							console.log("Audio restarted");
+						}
 					}
 				}
 
@@ -205,12 +233,15 @@
 		<p>The first thing you hear is an obnoxious wave sound to set volume</p>
 		<p>If you don't hear that after clicking the button, refresh the page.</p>
 
-		<!-- Input fields for start and stop times -->
+		<!-- Input fields for start, stop, and restart times -->
 		<label for="startTime">Start Time (HH:MM):</label>
 		<input type="time" id="startTime" value="11:00">
 		<br>
 		<label for="stopTime">Stop Time (HH:MM):</label>
 		<input type="time" id="stopTime" value="11:15">
+		<br>
+		<label for="restartTime">Restart Time (HH:MM):</label>
+		<input type="time" id="restartTime" value="11:30">
 		<br><br>
 
 		<!-- Play button -->

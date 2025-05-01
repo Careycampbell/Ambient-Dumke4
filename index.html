@@ -30,13 +30,17 @@
 			});
 
 			function scheduleAudioAutomation() {
-				const startTime = { hour: 10, minute: 40 }; // 9:00 AM
-				const stopTime = { hour: 10, minute: 45 }; // 5:00 PM
+				const startTime = { hour: 11, minute: 0 }; // 9:00 AM
+				const stopTime = { hour: 11, minute: 15 }; // 5:00 PM
 
 				function checkTime() {
 					const now = new Date();
 					const currentHour = now.getHours();
 					const currentMinute = now.getMinutes();
+
+					console.log(`Current time: ${currentHour}:${currentMinute}`);
+					console.log(`Start time: ${startTime.hour}:${startTime.minute}`);
+					console.log(`Stop time: ${stopTime.hour}:${stopTime.minute}`);
 
 					if (
 						currentHour > startTime.hour ||

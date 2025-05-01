@@ -81,6 +81,7 @@
 						if (Tone.Transport.state !== "started") {
 							Tone.Transport.stop(); // Ensure the transport is stopped before restarting
 							Tone.Transport.cancel(); // Clear all scheduled events
+							console.log("Transport canceled. Reinitializing scheduled functions...");
 							initializeScheduledFunctions(); // Reinitialize scheduled functions
 							Tone.Transport.start(); // Restart the transport
 							console.log("Audio restarted and transport reinitialized");
@@ -96,7 +97,7 @@
 			}
 
 			function initializeScheduledFunctions() {
-				// Reinitialize all scheduled functions here
+				console.log("Initializing scheduled functions...");
 				scheduleRandomRepeat((time) => playRandomOneShot(time), 30, 45);
 				scheduleRandomRepeat((time) => sampler2.triggerAttack('F4', time), 15, 30);
 				scheduleRandomRepeat((time) => sampler2.triggerAttack('Ab4', time), 15, 30);
@@ -109,6 +110,7 @@
 				scheduleRandomRepeat((time) => sampler1.triggerAttack('F0', time), 25, 45.3);
 				scheduleRandomRepeat((time) => sampler1.triggerAttack('G2', time), 35, 40);
 				scheduleRandomRepeat((time) => sampler1.triggerAttack('D#2', time), 37, 50.4);
+				console.log("Scheduled functions reinitialized.");
 			}
 
 			const sampler1 = new Tone.Sampler({

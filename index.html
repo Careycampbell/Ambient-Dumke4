@@ -184,6 +184,8 @@
 					scheduledFunction(time);
 					scheduleRandomRepeat(scheduledFunction, minDelay, maxDelay); // Reschedule the function
 				}, startTime);
+
+				console.log(`Scheduled function to run in ${delay.toFixed(2)} seconds`);
 			}
 
 			const oneShots = new Tone.Players({

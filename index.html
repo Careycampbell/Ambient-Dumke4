@@ -18,36 +18,36 @@
 					Tone.Transport.start(); // Start the transport
 					console.log("Transport started");
 
-					// Get user-defined start and stop times
-					const startTimeInput = document.getElementById("startTime").value;
-					const stopTimeInput = document.getElementById("stopTime").value;
+					// Get user-defined unmute and mute times
+					const unmuteTimeInput = document.getElementById("unmuteTime").value;
+					const muteTimeInput = document.getElementById("muteTime").value;
 
-					const [startHour, startMinute] = startTimeInput.split(":").map(Number);
-					const [stopHour, stopMinute] = stopTimeInput.split(":").map(Number);
+					const [unmuteHour, unmuteMinute] = unmuteTimeInput.split(":").map(Number);
+					const [muteHour, muteMinute] = muteTimeInput.split(":").map(Number);
 
 					scheduleAudioAutomation(
-						{ hour: startHour, minute: startMinute },
-						{ hour: stopHour, minute: stopMinute }
+						{ hour: unmuteHour, minute: unmuteMinute },
+						{ hour: muteHour, minute: muteMinute }
 					);
 				});
 			});
 
-			function scheduleAudioAutomation(startTime, stopTime) {
+			function scheduleAudioAutomation(unmuteTime, muteTime) {
 				function checkTime() {
 					const now = new Date();
 					const currentHour = now.getHours();
 					const currentMinute = now.getMinutes();
 
 					console.log(`Current time: ${currentHour}:${currentMinute}`);
-					console.log(`Start time: ${startTime.hour}:${startTime.minute}`);
-					console.log(`Stop time: ${stopTime.hour}:${stopTime.minute}`);
+					console.log(`Unmute time: ${unmuteTime.hour}:${unmuteTime.minute}`);
+					console.log(`Mute time: ${muteTime.hour}:${muteTime.minute}`);
 
-					// Check if the current time is within the active range (startTime to stopTime)
+					// Check if the current time is within the active range (unmuteTime to muteTime)
 					if (
-						(currentHour > startTime.hour || 
-						(currentHour === startTime.hour && currentMinute >= startTime.minute)) &&
-						(currentHour < stopTime.hour || 
-						(currentHour === stopTime.hour && currentMinute < stopTime.minute))
+						(currentHour > unmuteTime.hour || 
+						(currentHour === unmuteTime.hour && currentMinute >= unmuteTime.minute)) &&
+						(currentHour < muteTime.hour || 
+						(currentHour === muteTime.hour && currentMinute < muteTime.minute))
 					) {
 						if (Tone.Master.volume.value !== 0) {
 							Tone.Master.volume.value = 0; // Unmute audio
@@ -62,8 +62,8 @@
 					}
 				}
 
-				// Check the time every minute
-				setInterval(checkTime, 60000); // 60,000 ms = 1 minute
+				// Check the time every 30 seconds
+				setInterval(checkTime, 30000); // 30,000 ms = 30 seconds
 
 				// Initial check
 				checkTime();
@@ -231,13 +231,13 @@
 		<p>The first thing you hear is an obnoxious wave sound to set volume</p>
 		<p>If you don't hear that after clicking the button, refresh the page.</p>
 
-		<!-- Input fields for start, stop, and restart times -->
-		<label for="startTime">Start Time (HH:MM):</label>
-		<input type="time" id="startTime" value="11:00">
+		<!-- Input fields for unmute and mute times -->
+		<label for="unmuteTime">Unmute Audio Time (HH:MM):</label>
+		<input type="time" id="unmuteTime" value="11:00">
 		<br>
-		<label for="stopTime">Stop Time (HH:MM):</label>
-		<input type="time" id="stopTime" value="11:15">
-			<br><br>
+		<label for="muteTime">Mute Audio Time (HH:MM):</label>
+		<input type="time" id="muteTime" value="11:15">
+		<br><br>
 
 		<!-- Play button -->
 		<button id="playButton">Start Audio Automation</button>

@@ -51,10 +51,9 @@
 							currentHour < stopTime.hour ||
 							(currentHour === stopTime.hour && currentMinute < stopTime.minute)
 						) {
-							if (Tone.Transport.state !== "started") {
-								initializeScheduledFunctions(); // Initialize scheduled functions
-								Tone.Transport.start(); // Start the transport
-								console.log("Audio started");
+							if (Tone.Master.volume.value !== 0) {
+								Tone.Master.volume.value = 0; // Unmute audio
+								console.log("Audio unmuted");
 							}
 							return;
 						}
@@ -65,10 +64,9 @@
 						currentHour > stopTime.hour ||
 						(currentHour === stopTime.hour && currentMinute >= stopTime.minute)
 					) {
-						if (Tone.Transport.state === "started") {
-							Tone.Transport.stop(); // Stop the transport
-							Tone.Transport.cancel(); // Clear all scheduled events
-							console.log("Audio stopped");
+						if (Tone.Master.volume.value !== -Infinity) {
+							Tone.Master.volume.value = -Infinity; // Mute audio
+							console.log("Audio muted");
 						}
 					}
 				}
@@ -248,10 +246,7 @@
 		<br>
 		<label for="stopTime">Stop Time (HH:MM):</label>
 		<input type="time" id="stopTime" value="11:15">
-		<br>
-		<label for="restartTime">Restart Time (HH:MM):</label>
-		<input type="time" id="restartTime" value="11:30">
-		<br><br>
+			<br><br>
 
 		<!-- Play button -->
 		<button id="playButton">Start Audio Automation</button>

@@ -42,6 +42,7 @@
 					console.log(`Stop time: ${stopTime.hour}:${stopTime.minute}`);
 					console.log(`Restart time: ${restartTime.hour}:${restartTime.minute}`);
 
+					// Start everything at the start time
 					if (
 						currentHour > startTime.hour ||
 						(currentHour === startTime.hour && currentMinute >= startTime.minute)
@@ -51,13 +52,15 @@
 							(currentHour === stopTime.hour && currentMinute < stopTime.minute)
 						) {
 							if (Tone.Transport.state !== "started") {
-								Tone.Transport.start();
+								initializeScheduledFunctions(); // Initialize scheduled functions
+								Tone.Transport.start(); // Start the transport
 								console.log("Audio started");
 							}
 							return;
 						}
 					}
 
+					// Stop everything at the stop time
 					if (
 						currentHour > stopTime.hour ||
 						(currentHour === stopTime.hour && currentMinute >= stopTime.minute)
@@ -67,21 +70,22 @@
 							(currentHour === restartTime.hour && currentMinute < restartTime.minute)
 						) {
 							if (Tone.Transport.state === "started") {
-								Tone.Transport.stop();
+								Tone.Transport.stop(); // Stop the transport
+								Tone.Transport.cancel(); // Clear all scheduled events
 								console.log("Audio stopped");
 							}
 							return;
 						}
 					}
 
+					// Restart everything at the restart time
 					if (
 						currentHour > restartTime.hour ||
 						(currentHour === restartTime.hour && currentMinute >= restartTime.minute)
 					) {
 						if (Tone.Transport.state !== "started") {
-							Tone.Transport.stop(); // Ensure the transport is stopped before restarting
+							Tone.Transport.stop(); // Stop the transport
 							Tone.Transport.cancel(); // Clear all scheduled events
-							console.log("Transport canceled. Reinitializing scheduled functions...");
 							initializeScheduledFunctions(); // Reinitialize scheduled functions
 							Tone.Transport.start(); // Restart the transport
 							console.log("Audio restarted and transport reinitialized");

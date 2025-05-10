@@ -42,12 +42,12 @@
 					console.log(`Unmute time: ${unmuteTime.hour}:${unmuteTime.minute}`);
 					console.log(`Mute time: ${muteTime.hour}:${muteTime.minute}`);
 
-					 // Determine if the unmute time is on the next day
+					// Determine if the unmute time is on the next day
 					const isNextDayUnmute = muteTime.hour < unmuteTime.hour || 
 						(muteTime.hour === unmuteTime.hour && muteTime.minute <= unmuteTime.minute);
 
 					// Check if the current time is within the active range
-					if (
+					const isWithinActiveRange = 
 						(!isNextDayUnmute && 
 							((currentHour > unmuteTime.hour || 
 							(currentHour === unmuteTime.hour && currentMinute >= unmuteTime.minute)) &&
@@ -57,14 +57,14 @@
 							((currentHour > unmuteTime.hour || 
 							(currentHour === unmuteTime.hour && currentMinute >= unmuteTime.minute)) ||
 							(currentHour < muteTime.hour || 
-							(currentHour === muteTime.hour && currentMinute < muteTime.minute))))
-					) {
+							(currentHour === muteTime.hour && currentMinute < muteTime.minute))));
+
+					if (isWithinActiveRange) {
 						if (Tone.Master.volume.value !== 0) {
 							Tone.Master.volume.value = 0; // Unmute audio
 							console.log("Audio unmuted");
 						}
 					} else {
-						// Otherwise, mute the audio
 						if (Tone.Master.volume.value !== -Infinity) {
 							Tone.Master.volume.value = -Infinity; // Mute audio
 							console.log("Audio muted");
@@ -242,10 +242,10 @@
 
 		<!-- Input fields for unmute and mute times -->
 		<label for="unmuteTime">Unmute Audio Time (HH:MM):</label>
-		<input type="time" id="unmuteTime" value="07:00">
+		<input type="time" id="unmuteTime" value="09:00">
 		<br>
 		<label for="muteTime">Mute Audio Time (HH:MM):</label>
-		<input type="time" id="muteTime" value="22:00">
+		<input type="time" id="muteTime" value="21:00">
 		<br><br>
 
 		<!-- Play button -->

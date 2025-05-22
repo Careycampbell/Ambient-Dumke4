@@ -106,7 +106,7 @@
 				},
 				attack: 3,
 				release: 2.5,
-				volume: -37,
+				volume: -30,
 				onload: () => console.log("Sampler1 loaded"),
 			});
 
@@ -188,11 +188,11 @@
 				onerror: (error, key) => console.error(`Error loading oneShot: ${key}`, error),
 			}).toDestination();
 
-			oneShots.player("two").volume.value = -25;
-			oneShots.player("five").volume.value = -30;
-			oneShots.player("six").volume.value = -30;
-			oneShots.player("seven").volume.value = -27;
-			oneShots.player("four").volume.value = -5;
+			oneShots.player("two").volume.value = -20;
+			oneShots.player("five").volume.value = -20;
+			oneShots.player("six").volume.value = -20;
+			oneShots.player("seven").volume.value = -20;
+			oneShots.player("four").volume.value = +2;
 			oneShots.volume.value = -30;
 
 			function playRandomOneShot(time) {
@@ -203,7 +203,7 @@
 				player.start(time);
 			}
 
-			scheduleRandomRepeat((time) => playRandomOneShot(time), 30, 45);
+			scheduleRandomRepeat((time) => playRandomOneShot(time), 40, 90);
 			scheduleRandomRepeat((time) => sampler2.triggerAttack('F4', time), 15, 30);
 			scheduleRandomRepeat((time) => sampler2.triggerAttack('Ab4', time), 15, 30);
 			scheduleRandomRepeat((time) => sampler2.triggerAttack('C5', time), 15, 30);
